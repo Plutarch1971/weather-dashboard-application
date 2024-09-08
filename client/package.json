@@ -9,10 +9,18 @@
     "preview": "vite preview"
   },
   "devDependencies": {
-    "typescript": "^5.4.5",
+    "@types/express": "^4.17.21",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.5.4",
     "vite": "^5.2.0"
   },
   "dependencies": {
-    "dayjs": "^1.11.10"
-  }
+    "dayjs": "^1.11.10",
+    "express": "^4.19.2"
+  },
+  "main": "vite.config.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": ""
 }
