@@ -10,10 +10,10 @@ router.post('/', async (req, res) => {
     const cityName = req.body.cityName;
     
     // TODO: GET weather data from city name
-    const weatherData = await getWeatherData(cityName);
+    const weatherData = await WeatherService.getWeatherForCity(cityName);
     
     // TODO: save city to search history
-    saveToSearchHistory(cityName);
+    HistoryService.addCity(cityName);
     
     res.status(200).json(weatherData);
   } catch (error) {
