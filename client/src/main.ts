@@ -34,22 +34,50 @@ API Calls
 
 */
 
+// const fetchWeather = async (cityName: string) => {
+//   console.log('cityName: ', cityName);
+//   const response = await fetch('/api/weather/', {
+//     method: 'POST',
+//     headers: {
+//       'Content-Type': 'application/json',
+//     },
+//     body: JSON.stringify({ cityName }),
+//   });
+
+//   const weatherData = await response.json();
+
+//   console.log('weatherData: ', weatherData);
+
+//   renderCurrentWeather(weatherData[0]);
+//   renderForecast(weatherData.slice(1));
+// };
 const fetchWeather = async (cityName: string) => {
-  const response = await fetch('/api/weather/', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ cityName }),
-  });
+  try {
+    const response = await fetch('/api/weather/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ cityName }),
+    });
+    console.log('Response: ', response);
+    if (!response.ok) {
+      throw new Error('Failed to fetch weather data');
+    }
 
-  const weatherData = await response.json();
+    const weatherData = await response.json();
 
-  console.log('weatherData: ', weatherData);
-
-  renderCurrentWeather(weatherData[0]);
-  renderForecast(weatherData.slice(1));
+    if (weatherData && weatherData.length > 0) {
+      renderCurrentWeather(weatherData[0]);
+      renderForecast(weatherData.slice(1));
+    } else {
+      throw new Error('Weather data is empty');
+    }
+  } catch (error) {
+    console.error('Error fetching weather data:', error);
+  }
 };
+
 
 const fetchSearchHistory = async () => {
   const history = await fetch('/api/weather/history', {
@@ -76,9 +104,21 @@ Render Functions
 
 */
 
+// const renderCurrentWeather = (currentWeather: any): void => {
+//   console.log('currentWeather: ', currentWeather);
+//   const { city, date, icon, iconDescription, tempF, windSpeed, humidity } =
+//     currentWeather;
+    
 const renderCurrentWeather = (currentWeather: any): void => {
-  const { city, date, icon, iconDescription, tempF, windSpeed, humidity } =
-    currentWeather;
+  if (!currentWeather) {
+    console.error('No current weather data available');
+    return;
+  }
+
+  const { city, date, icon, iconDescription, tempF, windSpeed, humidity } = currentWeather;
+
+  // Rest of your rendering logic
+
 
   // convert the following to typescript
   heading.textContent = `${city} (${date})`;
@@ -257,6 +297,7 @@ const handleSearchFormSubmit = (event: any): void => {
   }
 
   const search: string = searchInput.value.trim();
+  
   fetchWeather(search).then(() => {
     getAndRenderHistory();
   });

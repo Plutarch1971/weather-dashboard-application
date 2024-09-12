@@ -8,6 +8,7 @@ import WeatherService from '../../service/weatherService.js';
 router.post('/', async (req, res) => {
   try {
     const cityName = req.body.cityName;
+    console.log('cityName: ', cityName);
     
     // TODO: GET weather data from city name
     const weatherData = await WeatherService.getWeatherForCity(cityName);
@@ -18,7 +19,9 @@ router.post('/', async (req, res) => {
     res.status(200).json(weatherData);
   } catch (error) {
     console.error(error);
+    console.log('error: ', error);
     res.status(500).json({ message: 'Internal server error' });
+    
   }
 });
 

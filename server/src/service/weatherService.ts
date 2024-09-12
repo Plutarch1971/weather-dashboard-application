@@ -23,14 +23,16 @@ export class Weather {
 class WeatherService {
   // TODO: Define the baseURL, API key, and city name properties
   private baseURL: string;
-  private apiKey: string;
+  private API_key: string;
   private cityName: string;
   private query: string;
 
   constructor() {
     this.baseURL = 'https://api.openweathermap.org';
-    this.query= `api.openweathermap.org/data/2.5/forecast?q=${this.cityName}&appid=${this.apiKey}`;
-    this.apiKey = "7d95713511593afcc21be381d93af518";
+    this.query = '';
+    // this.query= `https://api.openweathermap.org/data/2.5/forecast?q=${this.cityName}&appid=${this.apiKey}`;
+
+    this.API_key = '';
     this.cityName = '';
   }
 
@@ -57,12 +59,12 @@ class WeatherService {
   // TODO: Create buildGeocodeQuery method
   private buildGeocodeQuery(): string {
   
-    return `${this.baseURL}/geo/1.0/direct?q=${this.cityName}&limit=1&appid=${this.apiKey}`; // Add a return statement here
+    return `${this.baseURL}/geo/1.0/direct?q=${this.cityName}&limit=1&appid=${this.API_key}`; // Add a return statement here
   }
   // TODO: Create buildWeatherQuery method
   private buildWeatherQuery(coordinates: Coordinates): string {
     const { latitude, longitude } = coordinates;
-    return `${this.baseURL}/data/2.5/onecall?lat=${latitude}&lon=${longitude}&appid=${this.apiKey}`;
+    return `${this.baseURL}/data/2.5/onecall?lat=${latitude}&lon=${longitude}&appid=${this.API_key}`;
   }
   // TODO: Create fetchAndDestructureLocationData method
   private async fetchAndDestructureLocationData() {
@@ -76,6 +78,7 @@ class WeatherService {
       console.log('Failed to fetch weather data');
     } else {
       const weatherData = await response.json();
+      console.log('weatherData: ', weatherData);
       return weatherData;
     }
   }
@@ -86,7 +89,9 @@ class WeatherService {
     return new Weather(name, temp, humidity);
    }
   // TODO: Complete buildForecastArray method
-  private buildForecastArray(currentWeather: Weather, weatherData: any[]) {
+  public buildForecastArray(currentWeather: Weather, weatherData: any[]) {
+    console.log('weatherData: ', weatherData);
+    console.log('currentWeather: ', currentWeather);
     const forecastArray: Weather[] = [currentWeather];
     for (let i = 1; i < 6; i++) {
       const { temp, humidity } = weatherData[i];
