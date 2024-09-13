@@ -38,8 +38,10 @@ class WeatherService {
 
   // TODO: Create fetchLocationData method
   public fetchLocationData = async (query: string) => {
+    console.log('query: ', query);
     try{
       const response = await fetch(query);
+      console.log('response: ', response);
       if (!response.ok) {
         console.log('Failed to fetch location data');
       }else{
@@ -53,6 +55,7 @@ class WeatherService {
   }
   // TODO: Create destructureLocationData method
   private destructureLocationData(locationData: Coordinates): Coordinates {
+    console.log('locationData: ', locationData);
     const { latitude, longitude } = locationData;
     return { latitude, longitude };
   }
@@ -68,8 +71,7 @@ class WeatherService {
   }
   // TODO: Create fetchAndDestructureLocationData method
   private async fetchAndDestructureLocationData() {
-    const locationData = await this.fetchLocationData(this.buildGeocodeQuery());
-    return this.destructureLocationData(locationData);
+    return await this.fetchLocationData(this.buildGeocodeQuery()).then((locationData)=> this.destructureLocationData(locationData));
   }
   // TODO: Create fetchWeatherData method
   private async fetchWeatherData(coordinates: Coordinates) {

@@ -34,49 +34,50 @@ API Calls
 
 */
 
-// const fetchWeather = async (cityName: string) => {
-//   console.log('cityName: ', cityName);
-//   const response = await fetch('/api/weather/', {
-//     method: 'POST',
-//     headers: {
-//       'Content-Type': 'application/json',
-//     },
-//     body: JSON.stringify({ cityName }),
-//   });
-
-//   const weatherData = await response.json();
-
-//   console.log('weatherData: ', weatherData);
-
-//   renderCurrentWeather(weatherData[0]);
-//   renderForecast(weatherData.slice(1));
-// };
 const fetchWeather = async (cityName: string) => {
-  try {
-    const response = await fetch('/api/weather/', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ cityName }),
-    });
-    console.log('Response: ', response);
-    if (!response.ok) {
-      throw new Error('Failed to fetch weather data');
-    }
+  console.log('cityName: ', cityName);
+  const response = await fetch('/api/weather/', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ cityName }),
+  });
 
-    const weatherData = await response.json();
+  const weatherData = await response.json();
 
-    if (weatherData && weatherData.length > 0) {
-      renderCurrentWeather(weatherData[0]);
-      renderForecast(weatherData.slice(1));
-    } else {
-      throw new Error('Weather data is empty');
-    }
-  } catch (error) {
-    console.error('Error fetching weather data:', error);
-  }
+  console.log('weatherData: ', weatherData);
+
+  renderCurrentWeather(weatherData[0]);
+  renderForecast(weatherData.slice(1));
 };
+// const fetchWeather = async (cityName: string) => {
+//   try {
+//     const response = await fetch('/api/weather/', {
+//       method: 'POST',
+//       headers: {
+//         'Content-Type': 'application/json',
+//       },
+//       body: JSON.stringify({ cityName }),
+//     });
+//     console.log ('cityName: ', cityName);
+//     console.log('Response: ', response);
+//     if (!response.ok) {
+//       throw new Error('Failed to fetch weather data');
+//     }
+
+//     const weatherData = await response.json();
+
+//     if (weatherData && weatherData.length > 0) {
+//       renderCurrentWeather(weatherData[0]);
+//       renderForecast(weatherData.slice(1));
+//     } else {
+//       throw new Error('Weather data is empty');
+//     }
+//   } catch (error) {
+//     console.error('Error fetching weather data:', error);
+//   }
+// };
 
 
 const fetchSearchHistory = async () => {
