@@ -40,6 +40,12 @@ class HistoryService {
     const newCities = cities.filter((city: City) => city.id !== id);
     await this.write(newCities);
   }
+  // my TODO: define getHistory() weatherRoutes.ts
+  public async getHistory() {
+    // Implementation for retrieving history
+    return this.getCities(); // Example return value
+  }
+
 }
 
 export default new HistoryService();

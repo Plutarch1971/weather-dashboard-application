@@ -27,9 +27,26 @@ router.post('/', async (req: Request, res: Response) => {
 });
 
 // TODO: GET search history
-router.get('/history', async (req, res) => {});
+router.get('/history', async (req: Request, res: Response) => {
+  try {
+    const history = await HistoryService.getHistory();
+    res.status(200).json(history);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
 
 // * BONUS TODO: DELETE city from search history
-router.delete('/history/:id', async (req, res) => {});
+router.delete('/history/:id', async (req: Request, res: Response) => {
+  try {
+    const cityId = req.params.id;
+    await HistoryService.removeCity(cityId);
+    res.status(200).json({ message: 'City deleted from history' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
 
 export default router;

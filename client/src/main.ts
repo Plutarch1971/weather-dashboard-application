@@ -48,8 +48,12 @@ const fetchWeather = async (cityName: string) => {
 
   console.log('weatherData: ', weatherData);
 
-  renderCurrentWeather(weatherData[0]);
-  renderForecast(weatherData.slice(1));
+  if (Array.isArray(weatherData) && weatherData.length > 0) {
+    renderCurrentWeather(weatherData[0]);
+    renderForecast(weatherData.slice(1)); // Corrected slice usage
+  } else {
+    console.error('Unexpected weather data format:', weatherData);
+  }
 };
 // const fetchWeather = async (cityName: string) => {
 //   try {
