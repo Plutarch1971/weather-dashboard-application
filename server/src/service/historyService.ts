@@ -13,13 +13,13 @@ import fs from 'fs';
 class HistoryService {
   // TODO: Define a read method that reads from the searchHistory.json file
   private async read() {
-    const data = await fs.promises.readFile('searchHistory.json', 'utf-8');
+    const data = await fs.promises.readFile('..\..\db\searchHistory.json', 'utf-8');
     return JSON.parse(data);
-    this.read();
+   
   }
   // TODO: Define a write method that writes the updated cities array to the searchHistory.json file
     private async write(cities: City[]) {
-      await fs.promises.writeFile('searchHistory.json', JSON.stringify(cities));
+      await fs.promises.writeFile('..\..\db\searchHistory.json', JSON.stringify(cities));
     }
   // TODO: Define a getCities method that reads the cities from the searchHistory.json file and returns them as an array of City objects
   public async getCities() {
@@ -27,6 +27,7 @@ class HistoryService {
     return cities.map((city: City) => new City(city.name, city.id));
   }
 
+  
   // TODO Define an addCity method that adds a city to the searchHistory.json file
   public async addCity(city: string) {
     const cities = await this.getCities();

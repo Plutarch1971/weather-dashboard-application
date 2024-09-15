@@ -4,8 +4,8 @@ dotenv.config();
 
 // TODO: Define an interface for the Coordinates object
 interface Coordinates {
-  latitude: number;
-  longitude: number;
+  lat: number;
+  lon: number;
 }
 // TODO: Define a class for the Weather object
 export class Weather {
@@ -29,10 +29,8 @@ class WeatherService {
 
   constructor() {
     this.baseURL = 'https://api.openweathermap.org';
-    this.query = '';
-    // this.query= `https://api.openweathermap.org/data/2.5/forecast?q=${this.cityName}&appid=${this.apiKey}`;
-
-    this.API_key = '';
+    this.query = 'apiUrl';
+    this.API_key = process.env.API_KEY || '';
     this.cityName = '';
   }
 
@@ -56,8 +54,8 @@ class WeatherService {
   // TODO: Create destructureLocationData method
   private destructureLocationData(locationData: Coordinates): Coordinates {
     console.log('locationData: ', locationData);
-    const { latitude, longitude } = locationData;
-    return { latitude, longitude };
+    const { lat, lon } = locationData[0];
+    return { lat, lon };
   }
   // TODO: Create buildGeocodeQuery method
   private buildGeocodeQuery(): string {
@@ -66,8 +64,9 @@ class WeatherService {
   }
   // TODO: Create buildWeatherQuery method
   private buildWeatherQuery(coordinates: Coordinates): string {
-    const { latitude, longitude } = coordinates;
-    return `${this.baseURL}/data/2.5/onecall?lat=${latitude}&lon=${longitude}&appid=${this.API_key}`;
+    console.log('coordinates: ', coordinates);
+    const { lat, lon } = coordinates;
+    return `${this.baseURL}/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${this.API_key}`;
   }
   // TODO: Create fetchAndDestructureLocationData method
   private async fetchAndDestructureLocationData() {
@@ -75,6 +74,7 @@ class WeatherService {
   }
   // TODO: Create fetchWeatherData method
   private async fetchWeatherData(coordinates: Coordinates) {
+    console.log('this.buildWeatherQuery(coordinates): ', this.buildWeatherQuery(coordinates));
     const response = await fetch(this.buildWeatherQuery(coordinates));
     if (!response.ok) {
       console.log('Failed to fetch weather data');
@@ -86,28 +86,30 @@ class WeatherService {
   }
   // TODO: Build parseCurrentWeather method
    private parseCurrentWeather(response: any) {
-    const { name } = response;
-    const { temp, humidity } = response.main;
-    return new Weather(name, temp, humidity);
+    const { temp, humidity } = response.list[0].main;
+    return new Weather(this.cityName, temp, humidity);
    }
   // TODO: Complete buildForecastArray method
   public buildForecastArray(currentWeather: Weather, weatherData: any[]) {
     console.log('weatherData: ', weatherData);
     console.log('currentWeather: ', currentWeather);
     const forecastArray: Weather[] = [currentWeather];
-    for (let i = 1; i < 6; i++) {
+    for (let i = 1; i < 6; i++) {  
+      //check the time on each of the weatherData objects
+      //only push the ones that are at 12:00. parse with day.js
       const { temp, humidity } = weatherData[i];
       forecastArray.push(new Weather(this.cityName, temp, humidity));
     }
     return forecastArray;
   }
+  
   // TODO: Complete getWeatherForCity method
   public async getWeatherForCity(city: string) {
     this.cityName = city;
     const coordinates = await this.fetchAndDestructureLocationData();
     const weatherData = await this.fetchWeatherData(coordinates);
-    const currentWeather = this.parseCurrentWeather(weatherData.current);
-    return this.buildForecastArray(currentWeather, weatherData);
+    const currentWeather = this.parseCurrentWeather(weatherData);
+    return this.buildForecastArray(currentWeather, weatherData.list);
   }
 }
 
