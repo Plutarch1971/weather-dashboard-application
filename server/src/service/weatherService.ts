@@ -123,7 +123,7 @@ class WeatherService {
 
       if (formattedTime === "12:00:00") {
         const { main: { temp }, wind: { speed }, main: { humidity }, weather } = weatherData[i];
-        const tempF = (temp - 273.15) * 9/5 + 32; // Convert Kelvin to Fahrenheit
+        const tempF = Math.round((temp - 273.15) * 9/5 + 32); // Convert Kelvin to Fahrenheit
         const icon = weather[0].icon;
         const iconDescription = weather[0].description;
         forecastArray.push(new Weather(this.city, date, tempF, speed, humidity, icon, iconDescription));
