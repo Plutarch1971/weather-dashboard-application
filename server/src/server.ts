@@ -5,9 +5,10 @@ dotenv.config();
 // Import the routes
 import routes from './routes/index.js';
 
+// Create an instance of express
 const app = express();
-
 const PORT = process.env.PORT || 3001;
+
 
 // Serve static files of entire client dist folder
 app.use(express.static('/Users/matthewmendez/bootcamp/Assignments/weather-dashboard-application/client/dist'));
@@ -20,4 +21,6 @@ app.use(express.urlencoded({ extended: true }));
 app.use(routes);
 
 // Start the server on the port
-app.listen(PORT, () => console.log(`Listening on PORT: ${PORT}`));
+app.listen(PORT, () => {
+    console.log(`Server running at http://localhost: ${PORT}`);
+});
