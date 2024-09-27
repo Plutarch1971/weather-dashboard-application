@@ -7,7 +7,7 @@ import routes from './routes/index.js';
 
 // Create an instance of express
 const app = express();
-const PORT = process.env.PORT || 3002;
+const PORT = process.env.PORT || 3003;
 
 
 // Serve static files of entire client dist folder
