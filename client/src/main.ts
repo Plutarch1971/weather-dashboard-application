@@ -35,17 +35,17 @@ API Calls
 */
 
 
-const fetchWeather = async (cityName: string) => {
+const fetchWeather = async (city: string) => {
   try {
     const response = await fetch('/api/weather/', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ cityName }),
+      body: JSON.stringify({city}),
     });
-    console.log('cityName: ', cityName);
-    console.log('Response: ', response);
+    //console.log('cityName: ', city);
+   // console.log('Response: ', response);
     if (!response.ok) {
       throw new Error(`Failed to fetch weather data: ${response.statusText}`);
     }

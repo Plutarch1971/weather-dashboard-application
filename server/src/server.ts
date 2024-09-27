@@ -7,11 +7,11 @@ import routes from './routes/index.js';
 
 // Create an instance of express
 const app = express();
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3002;
 
 
 // Serve static files of entire client dist folder
-app.use(express.static('/Users/matthewmendez/bootcamp/Assignments/weather-dashboard-application/client/dist'));
+app.use(express.static('../client/dist'));
 
 // Implement middleware for parsing JSON and urlencoded form data
 app.use(express.json());

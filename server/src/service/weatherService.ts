@@ -50,30 +50,14 @@ class WeatherService implements IWeatherService {
   private city: string;
   
     constructor() {
-    this.baseURL = process.env.BASE_URL || '';
+    this.baseURL = process.env.API_BASE_URL || '';
     this.API_key = process.env.API_KEY || '';
     this.city = '';
-    console.log ('Line 56: this.API_key: ', this .API_key);
+   // console.log ('Line 56: this.API_key: ', this .API_key);
   }
-
-  // TODO: Create fetchLocationData method
-  // public fetchLocationData = async (query: string) => { 
-  //   try{
-  //     const response = await fetch(query);   
-  //     if (!response) {    
-  //       console.log('Failed to fetch location data');  
-  //     }else{
-  //       const locationData = await response.json();   
-  //       return locationData;
-  //     }
-  //   }catch(e){
-  //     console.error(e);
-  //   } 
-  // }
   
-  
-  static async fetchLocationData(query: string) {
-    
+  private async fetchLocationData(query: string) {
+    console.log('Line 76 : query: ', query);
     //const response = await fetch(`https://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=1&appid=${API_key}`);
     const response = await fetch(query);
     if (!response.ok) {
@@ -90,19 +74,25 @@ class WeatherService implements IWeatherService {
   }
 
   // TODO: Create destructureLocationData method
-  static async destructureLocationData(city : string): Promise<Coordinates> {
-    const locationData = await this.fetchLocationData(city);
-  if (!locationData || !locationData.lat || !locationData.lon) {
-    throw new Error('Location data is missing latitude or longitude');
-  }
-    const { lat, lon } = locationData;
-    if (lat === undefined || lon === undefined) {
-      throw new Error('Location data is missing Latitude or longitude');
-    }
+  private async destructureLocationData(city : Coordinates): Promise<Coordinates> {
+    console.log(city, 'city line78')
+    const locationData = city;
+
+    //const locationData = await this.fetchLocationData(city);
+  // if (!locationData || !locationData.lat || !locationData.lon) {
+  //   throw new Error('Location data is missing latitude or longitude');
+  // }
+     const { lat, lon } = locationData;
+  //   if (lat === undefined || lon === undefined) {
+  //     throw new Error('Location data is missing Latitude or longitude');
+  //   }
     return { lat, lon };
   }
+
+
   // TODO: Create buildGeocodeQuery method
   private buildGeocodeQuery(): string {
+    console.log(this.baseURL, 'this.baseURL');
   
     return `${this.baseURL}/geo/1.0/direct?q=${this.city}&limit=1&appid=${this.API_key}`; // Add a return statement here
   }
@@ -114,14 +104,10 @@ class WeatherService implements IWeatherService {
   }
   // TODO: Create fetchAndDestructureLocationData method
   private async fetchAndDestructureLocationData() {
-    const locationData = await WeatherService.fetchLocationData(this.buildGeocodeQuery());
-    if (locationData) {
-      return WeatherService.destructureLocationData(this.city);
-    }else{
-      throw new Error('Failed to fetch location data');
-    }
-    // return await WeatherService.fetchLocationData(this.buildGeocodeQuery()).then((locationData)=> WeatherService.destructureLocationData(locationData));
+    
+    return await this.fetchLocationData(this.buildGeocodeQuery()).then((locationData) => this.destructureLocationData(locationData));
   }
+  
   // TODO: Create fetchWeatherData method
   private async fetchWeatherData(coordinates: Coordinates) {
     console.log('this.buildWeatherQuery(coordinates): ', this.buildWeatherQuery(coordinates));
@@ -156,10 +142,8 @@ class WeatherService implements IWeatherService {
         const icon = weather[0].icon;
         const iconDescription = weather[0].description;
         forecastArray.push(new Weather(this.city, date, tempF, speed, humidity, icon, iconDescription));
-      }
-      
-      //const { city, date, tempF, windSpeed, humidity, icon, iconDescription } = weatherData[i];
-      //forecastArray.push(new Weather(city, date, tempF, windSpeed, humidity, icon, iconDescription));
+      } 
+     
     }
     return forecastArray;
   }
@@ -167,14 +151,14 @@ class WeatherService implements IWeatherService {
   // TODO: Complete getWeatherForCity method
   public async getWeatherForCity(city: string): Promise<Weather[]> {
     this.city = city;
-    //const { lat, lon } = await WeatherService.destructureLocationData(city);
-    // Use lat and lon to get weather data...
+   // const { lat, lon } = await this.destructureLocationData(city);
     const coordinates = await this.fetchAndDestructureLocationData();
     const weatherData = await this.fetchWeatherData(coordinates);
     const currentWeather = this.parseCurrentWeather(weatherData);
     return this.buildForecastArray(currentWeather, weatherData.list);
+   
   }
 }
-
 export default new WeatherService();
+
 
