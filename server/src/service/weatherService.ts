@@ -39,11 +39,11 @@ class Weather implements IWeather {
   }
 }
 // Define an interface for the WeatherService object
-interface IWeatherService {
-  getWeatherForCity(city: string) :Promise<IWeather[]>;//This is an async function that should return an array of Weather objects
-}
+// interface IWeatherService {
+//   getWeatherForCity(city: string) :Promise<IWeather[]>;//This is an async function that should return an array of Weather objects
+// }
 // TODO: Complete the WeatherService class
-class WeatherService implements IWeatherService {
+class WeatherService {
   // TODO: Define the baseURL, API key, and city name properties
   private baseURL: string;
   private API_key: string;
@@ -103,11 +103,17 @@ class WeatherService implements IWeatherService {
   private async fetchWeatherData(coordinates: Coordinates) {
     console.log('this.buildWeatherQuery(coordinates): ', this.buildWeatherQuery(coordinates));
    try {
-      const response = await fetch(this.buildWeatherQuery(coordinates));
-      const weatherData = await response.json();
+      const response = await fetch(this.buildWeatherQuery(coordinates)).then((res) => res.json());
+      // const weatherData = await response.json();
+      console.log('line108', response, 'line108')
+      if (!response) {
+        throw new Error('weather data not found');
+      }
+
+      //const currentWeatherData = this.parseCurrentWeather(response.list[0])
        
       // Access the correct property of the response that contains the array of weather data
-      const forecastArray = weatherData.list; // Assuming the array is under 'list'
+      const forecastArray = response.list; // Assuming the array is under 'list'
       
       // Map the data to the Weather class
       return forecastArray.map((day: any) => {
@@ -128,10 +134,9 @@ class WeatherService implements IWeatherService {
   }
   // TODO: Build parseCurrentWeather method
    private parseCurrentWeather(response: any) {
-    if (!response.list || response.list.length === 0) {
-      throw new Error("No weather data available");
-    }
-    const { city, date, tempF, windSpeed, humidity, icon, iconDescription } = response.list[0].main;
+    console.log('line131', response, 'responseline131')
+
+    const { city, date, tempF, windSpeed, humidity, icon, iconDescription } = response[0];
     return new Weather(city, date, tempF, windSpeed, humidity, icon, iconDescription);
    }
   // TODO: Complete buildForecastArray method
@@ -140,7 +145,7 @@ class WeatherService implements IWeatherService {
     console.log('weatherData: ', weatherData);
     console.log('currentWeather: ', currentWeather);
     const forecastArray: Weather[] = [currentWeather];
-    for (let i = 0; i < 6; i++) {  
+    for (let i = 1; i < 6; i++) {  
       // Check the time on each of the weatherData objects
       const date = dayjs(weatherData[i].dt_txt).format('MM/DD/YYYY');
       const formattedTime = dayjs(weatherData[i].dt_txt).format('HH:mm:ss');
@@ -148,8 +153,8 @@ class WeatherService implements IWeatherService {
       if (formattedTime === "12:00:00") {
         const { main: { temp }, wind: { speed }, main: { humidity }, weather } = weatherData[i];
         const tempF = Math.round((temp - 273.15) * 9/5 + 32); // Convert Kelvin to Fahrenheit
-        const icon = weather[0].icon;
-        const iconDescription = weather[0].description;
+        const icon = weather.icon;
+        const iconDescription = weather.iconDescription;
         forecastArray.push(new Weather(this.city, date, tempF, speed, humidity, icon, iconDescription));
       } 
      
