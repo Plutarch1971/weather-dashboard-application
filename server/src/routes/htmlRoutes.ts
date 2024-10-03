@@ -7,7 +7,16 @@ const router = Router();
 
 // TODO: Define route to serve index.html
 router.get('/', (req: Request, res: Response) => {
-  res.sendFile(path.join(__dirname, 'index.html'));
-});
+  try {
+    if (req.query.clear) {
+      // Implement logic to clear search history
+      res.sendFile(path.join(__dirname, 'index.html'));
+    }
+  } catch(error) {
+      console.error(error);
+      res.status(500).json({ message: 'Internal server error' });
+    }
+
+  });
 
 export default router;
