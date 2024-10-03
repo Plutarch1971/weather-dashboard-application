@@ -145,7 +145,8 @@ class WeatherService {
     console.log('weatherData: ', weatherData);
     console.log('currentWeather: ', currentWeather);
     const forecastArray: Weather[] = [currentWeather];
-    for (let i = 1; i < 6; i++) {  
+
+    for (let i = 0; i < 6; i++) {  
       // Check the time on each of the weatherData objects
       const date = dayjs(weatherData[i].dt_txt).format('MM/DD/YYYY');
       const formattedTime = dayjs(weatherData[i].dt_txt).format('HH:mm:ss');
