@@ -1,9 +1,1 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
-[{"name":"Toronto","id":"0"},{"name":"New York","id":"1"},{"name":"Oshawa","id":"2"},{"name":"Toronto","id":"3"},{"name":"Oshawa","id":"4"},{"name":"Toronto","id":"5"}]
-=======
-[{"name":"Toronto","id":"0"},{"name":"Jersey City","id":"1"},{"name":"Toronto","id":"2"},{"name":"Oshawa","id":"3"},{"name":"Dhaka","id":"4"},{"name":"Jersey City","id":"5"},{"name":"Toronto","id":"6"}]
->>>>>>> new-weather-app-interface
-=======
-[{"name":"Toronto","id":"0"},{"name":"Jersey City","id":"1"},{"name":"Oshawa","id":"2"},{"name":"New York","id":"3"},{"name":"Dhaka","id":"4"},{"name":"Toronto","id":"5"},{"name":"San Francisco","id":"6"}]
->>>>>>> 4a3fff9 (Showing 5 days Weather Data)
+[{"name":"Toronto","id":"0"},{"name":"Jersey City","id":"1"},{"name":"Oshawa","id":"2"},{"name":"New York","id":"3"},{"name":"Dhaka","id":"4"},{"name":"Toronto","id":"5"},{"name":"San Francisco","id":"6"},{"name":"Oshawa","id":"7"}]
