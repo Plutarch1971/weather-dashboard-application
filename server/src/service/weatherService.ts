@@ -133,11 +133,18 @@ class WeatherService {
     }
   }
   // TODO: Build parseCurrentWeather method
-   private parseCurrentWeather(response: any) {
-    console.log('line131', response, 'responseline131')
+   private parseCurrentWeather(weatherData: any) {
+    // const { city, date, tempF, windSpeed, humidity, icon, iconDescription } = response.main;
 
-    const { city, date, tempF, windSpeed, humidity, icon, iconDescription } = response[0];
-    return new Weather(city, date, tempF, windSpeed, humidity, icon, iconDescription);
+    return new Weather(
+      this.city,
+      dayjs(weatherData.dt*1000).format('MM/DD/YYYY'), 
+      weatherData.main.temp, 
+      weatherData.wind.speed, 
+      weatherData.main.humidity, 
+      weatherData.weather[0].icon, 
+      weatherData.weather[0].description, 
+      );
    }
   // TODO: Complete buildForecastArray method
   public buildForecastArray(currentWeather: Weather, weatherData: any[]) {
@@ -145,13 +152,12 @@ class WeatherService {
     console.log('weatherData: ', weatherData);
     console.log('currentWeather: ', currentWeather);
     const forecastArray: Weather[] = [currentWeather];
-
-    for (let i = 0; i < 6; i++) {  
+    for (let i = 0; i < weatherData.length; i++) {  
       // Check the time on each of the weatherData objects
-      const date = dayjs(weatherData[i].dt_txt).format('MM/DD/YYYY');
-      const formattedTime = dayjs(weatherData[i].dt_txt).format('HH:mm:ss');
+      const date = dayjs(weatherData[i].dt*1000).format('MM/DD/YYYY');
+      const formattedTime = dayjs(weatherData[i].dt).format('HH:mm:ss');
 
-      if (formattedTime === "12:00:00") {
+      if (weatherData[i].dt_txt.includes("12:00:00")) {
         const { main: { temp }, wind: { speed }, main: { humidity }, weather } = weatherData[i];
         const tempF = Math.round((temp - 273.15) * 9/5 + 32); // Convert Kelvin to Fahrenheit
         const icon = weather.icon;
@@ -168,7 +174,7 @@ class WeatherService {
     this.city = city;
     const coordinates = await this.fetchAndDestructureLocationData();
     const weatherData = await this.fetchWeatherData(coordinates);
-    const currentWeather = this.parseCurrentWeather(weatherData);
+    const currentWeather = this.parseCurrentWeather(weatherData.list[0]);
     return this.buildForecastArray(currentWeather, weatherData.list);
    
   }
