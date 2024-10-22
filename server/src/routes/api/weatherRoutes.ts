@@ -8,14 +8,14 @@ import WeatherService from '../../service/weatherService.js';
 router.post('/', async (req: Request, res: Response) => {
   console.log('req.body: ', req.body);
   try {
-    const cityName = req.body.cityName;
-    console.log('cityName: ', cityName);
+    const city = req.body.city;
+    console.log('cityName: ', city);
     
     // TODO: GET weather data from city name
-    const weatherData = await WeatherService.getWeatherForCity(cityName);
+    const weatherData = await WeatherService.getWeatherForCity(city);
     console.log('weatherData: ', weatherData);
     // TODO: save city to search history
-    HistoryService.addCity(cityName);
+    HistoryService.addCity(city);
     
     res.status(200).json(weatherData);
   } catch (error) {
@@ -29,8 +29,10 @@ router.post('/', async (req: Request, res: Response) => {
 // TODO: GET search history
 router.get('/history', async (req: Request, res: Response) => {
   try {
+    if (req.query.clear) {
     const history = await HistoryService.getHistory();
     res.status(200).json(history);
+    }
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Internal server error' });
